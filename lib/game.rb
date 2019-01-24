@@ -1,4 +1,3 @@
-
 require 'pry'
 
 
@@ -14,61 +13,121 @@ class Game
       @status = "on-going"
       
       @current_player = @player_1
-      
+      @player_value = "X"
     #TO DO : créé 2 joueurs, créé un board, met le status à "on going", défini un current_player
   end
-
+  
+  def welcome
+      puts "bonjour! bienvenue sur le super jeu de morpion, le jeu le plus strategique du monde! quel est le nom du joueur 1?"
+      puts "ton nom >"
+      @player_1 = gets.chomp
+      puts "super #{@player_1}! maintenant donnes le nom du joueur 2!"
+      puts "ton nom >"
+      @player_2 = gets.chomp
+      puts "c'est parti mon kiki! #{@player_1}, tu va jouer avec les X et #{@player_2} tu va jouer avec les O"
+  end
+  
+  def choice
+      puts "#{@current_player} vas-y, fais ton choix"
+      puts "case >"
+      return gets.chomp.downcase
+      
+  end
+  
+  def create_caseboard
+      return @caseboard_hash = {"a1" =>" ", "b1" => " ", "c1" => " ", "a2" =>" ", "b2" => " ", "c2" => " ", "a3" =>" ", "b3" => " ", "c3" => " "}
+  end
+  def show_board
+      puts "     A     B     C"
+      puts "  ------------------"
+      puts "1 |  #{@caseboard_hash['a1']}  |  #{@caseboard_hash['b1']}  |  #{@caseboard_hash['c1']}  |"
+      puts "  ------------------"
+      puts "2 |  #{@caseboard_hash['a2']}  |  #{@caseboard_hash['b2']}  |  #{@caseboard_hash['c2']}  |"
+      puts "  ------------------"
+      puts "3 |  #{@caseboard_hash['a3']}  |  #{@caseboard_hash['b3']}  |  #{@caseboard_hash['c3']}  |"
+      puts "  ------------------"
+  end
 
   def turn
-      puts @caseboard_hash
-      @choix = choice.downcase
-      if @caseboard_hash["#{@choix}"] != " "
+      choix = choice
+      if @caseboard_hash["#{choix}"] != " "
           puts "essaie une case vide."
-      else @caseboard_hash("#{@choix}") = @player_value
+      else @caseboard_hash["#{choix}"] = @player_value
       end
       
-      puts "Voici le tableau:"
-      puts @caseboard_hash
+      #puts "Voici le tableau:"
+      #puts @caseboard_hash
+      show_board
 
       end
-    #TO DO : méthode faisant appelle aux méthodes des autres classes (notamment à l'instance de Board). Elle affiche le plateau, demande au joueur ce qu'il joue, vérifie si un joueur a gagné, passe au joueur suivant si la partie n'est pas finie.
-  end
-
-  def new_round
-    # TO DO : relance une partie en initialisant un nouveau board mais en gardant les mêmes joueurs.
-  end
-
-  def game_end
-    # TO DO : permet l'affichage de fin de partie quand un vainqueur est détecté ou si il y a match nul
-  end    
 
 
+def change_player
+    if @current_player == @player_1
+        @current_player = @player_2
+        @player_value = "0"
+        else
+        @current_player = @player_1
+        @player_value = "X"
+        end
+    end
 
+def victory_message
+    puts "PARTIE FINIE !!!! bravo #{@current_player}"
+    end
 
-
-def welcome
-    puts "bonjour! bienvenue sur le super jeu de morpion, le jeu le plus strategique du monde! quel est le nom du joueur 1?"
-    puts "ton nom >"
-    player_1_name = gets.chomp
-    puts "super #{player_1_name}! maintenant donnes le nom du joueur 2!"
-    puts "ton nom >"
-    player_2_name = gets.chomp
-    puts "c'est parti mon kiki! #{player_1_name}, tu va jouer avec les X et #{player_2_name} tu va jouer avec les O"
-    return @players = [player_1_name, player_2_name]
+def null_message
+    puts "MATCH NUL ! fin de la partie."
 end
 
-def choice
-    puts "vas-y, fais ton choix"
-    puts "case >"
-    return @choix = gets.chomp.downcase
+def check_if_victory
+    if @caseboard_hash["a1"] == @caseboard_hash["b1"] && @caseboard_hash["a1"] == @caseboard_hash["c1"] && @caseboard_hash["a1"] != " "
+    return true
+    elsif @caseboard_hash["a2"] == @caseboard_hash["b2"] && @caseboard_hash["a2"] == @caseboard_hash["c2"] && @caseboard_hash["a2"] != " "
+    return true
+    elsif @caseboard_hash["a3"] == @caseboard_hash["b3"] && @caseboard_hash["a3"] == @caseboard_hash["c3"] && @caseboard_hash["a3"] != " "
+    return true
+    elsif @caseboard_hash["a1"] == @caseboard_hash["a2"] && @caseboard_hash["a3"] == @caseboard_hash["a1"] && @caseboard_hash["a2"] != " "
+    return true
+    elsif @caseboard_hash["b1"] == @caseboard_hash["b2"] && @caseboard_hash["b3"] == @caseboard_hash["b1"] && @caseboard_hash["b2"] != " "
+    return true
+    elsif @caseboard_hash["c1"] == @caseboard_hash["c2"] && @caseboard_hash["c3"] == @caseboard_hash["c1"] && @caseboard_hash["c2"] != " "
+    return true
+    elsif @caseboard_hash["a1"] == @caseboard_hash["b2"] && @caseboard_hash["c3"] == @caseboard_hash["a1"] && @caseboard_hash["c3"] != " "
+    return true
+    elsif @caseboard_hash["c1"] == @caseboard_hash["b2"] && @caseboard_hash["a3"] == @caseboard_hash["c1"] && @caseboard_hash["a3"] != " "
+    return true
+    else return false
+    end
+end
+
+
+def check_if_null
+    if @caseboard_hash.has_value?(" ") == false
+    return true
+    else return false
+    end
+end
+
+def check_if_game_finished
+    if check_if_victory == true
+        victory_message
+        elsif check_if_null == true
+        null_message
+        else
+        return false
+    end
+end
+
+
+end
     
-end
-
-def create_caseboard
-    return @caseboard_hash = {"a1" =>" ", "b1" => " ", "c1" => " ", "a2" =>" ", "b2" => " ", "c2" => " ", "a3" =>" ", "b3" => " ", "c3" => " "}
-end
-
-
 new_game = Game.new
-@status = "on-going"
 new_game.turn
+while new_game.check_if_game_finished == false
+    new_game.change_player
+    new_game.turn
+end
+
+
+        
